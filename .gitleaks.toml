@@ -1,0 +1,51 @@
+# gitleaks configuration for AgentID public repo
+#
+# This file documents why specific paths/patterns are excluded from secret
+# scanning. None of the excluded values are real secrets — each entry
+# explains why. Reviewers, auditors, and security researchers can verify
+# the rationale by checking the canonical source listed in the comment.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures, conformance vectors, and public-by-design certificates"
+
+paths = [
+    # Cross-runtime conformance test vectors. The EXPECTED_ROOT_KEY,
+    # EXPECTED_AEAD_KEY, and EXPECTED_NONCE_KEY values are HKDF outputs
+    # from a known seed — every correct implementation of the relay
+    # handshake MUST derive these exact bytes. They are conformance
+    # assertions, not secret material.
+    '''scripts/relay-handoff-demo\.py''',
+    '''scripts/relay-test\.py''',
+    '''scripts/relay-subscribe\.py''',
+
+    # DID method test vectors. Per W3C did:key spec, did:key encodes
+    # a public key — never a secret.
+    '''integrations/wg-integration/test_cross_runtime\.py''',
+
+    # README example output in code blocks. Values are illustrative and
+    # truncated (e.g. "3a7f2b1c9e4d8f6a5b0c7d2e..."), not real keys.
+    '''examples/qntm-encrypted-chat/README\.md''',
+
+    # Public proof reports — outputs of the public test runner. Every
+    # high-entropy value here is publicly verifiable:
+    #   - ed25519_key_bound is the PUBLIC half of an Ed25519 keypair,
+    #     bound on Solana devnet at
+    #     89oYHi5P9geikFnWqhZuvPYY44vKwVtXPjrRiNafCG5q (verifiable
+    #     via any Solana explorer).
+    #   - certificate is an HS256 JWT binding assertion AgentID issues
+    #     to every agent. Its body holds only public claims (agent_id,
+    #     public key, owner, capabilities, exp). The HMAC signature
+    #     prevents forgery; the token itself is meant to travel.
+    '''tests/proof_report.*\.json''',
+    '''tests/cross_test_report\.json''',
+    '''tests/multi_attestation_chain_report\.json''',
+]
+
+regexes = [
+    # Documented placeholder pattern in curl examples
+    # (e.g. blockchain/README.md shows "Bearer agentid_sk_...").
+    '''agentid_sk_\.\.\.''',
+]
