@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "getagentid-pydantic"
+version = "0.1.0"
+description = "AgentID identity verification plugin for pydantic-ai"
+readme = "README.md"
+license = {text = "Proprietary"}
+requires-python = ">=3.10"
+dependencies = ["getagentid>=0.5.0", "pydantic>=2.0", "httpx>=0.25.0", "pyjwt>=2.8.0"]
+
+[project.urls]
+Homepage = "https://getagentid.dev"
+Repository = "https://github.com/haroldmalikfrimpong-ops/getagentid"
