@@ -1,0 +1,251 @@
+{
+  "spec": "ctef-verifier-attestation/v0.1",
+  "verify_instructions": "Each attestation.jws is compact EdDSA; the JWS body is jcsSerialize(core) (RFC 8785). digest = sha256(body). live_production_example is signed by the production key and verifiable against https://getagentid.dev/.well-known/jwks.json (kid agentid-2026-03). The conformance_scenarios are signed with a local dev key (dev_signing_pubkey below) and exist to pin verdict logic + byte-match across implementations.",
+  "live_endpoint": "POST https://getagentid.dev/api/v1/agents/gateway/verifier-attestation",
+  "jwks": "https://getagentid.dev/.well-known/jwks.json",
+  "canonicalization": "JCS-RFC-8785",
+  "dev_signing_pubkey": "EKLUKeWKTwPXoVb5R6ZZZNH2AwBcWDGVCe5ZotQSvjWn",
+  "live_production_example": {
+    "type": "VerifierAttestation",
+    "spec": "ctef-verifier-attestation/v0.1",
+    "verifier": {
+      "id": "did:web:getagentid.dev",
+      "name": "AgentID",
+      "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
+      "kid": "agentid-2026-03"
+    },
+    "subject": {
+      "did": "did:web:getagentid.dev:agent:probe",
+      "agent_id": null
+    },
+    "admission": {
+      "verdict": "deny",
+      "trust_level": 1,
+      "trust_level_label": "L1 — Registered",
+      "dynamic_limit_usd": 0,
+      "permitted": false,
+      "reason_code": "identity_unresolvable"
+    },
+    "fast_gates": {
+      "identity": "unresolvable",
+      "certificate": "expired",
+      "key_lifecycle": "active"
+    },
+    "binding": {
+      "charge_ref": "fixture_live_001",
+      "amount_usd": 50,
+      "action_class": "irreversible",
+      "binding_digest": "b59684db2bf17c430623cca370d3e33471e328a6bef1960c8bee60de80c06b2e",
+      "nonce": "e7656150-dcf0-49b4-ad02-be91b0d5747a"
+    },
+    "enforcement": {
+      "guarantee": "point_in_time",
+      "checked_at": "2026-06-05T21:33:14.678Z",
+      "valid_for_seconds": 0,
+      "compose": "Gateway enforces static caps + settlement; this attestation supplies admission + dynamic limit. Effective limit = min(gateway_static_cap, admission.dynamic_limit_usd). Absent field => un-gated."
+    },
+    "issued_at": "2026-06-05T21:33:14.678Z",
+    "expires_at": "2026-06-05T21:33:14.678Z",
+    "canonicalization": "JCS-RFC-8785",
+    "digest": "dcbb3b21bf5d8e64bb0995a9567756609cde51b32616752481332b7dc1326396",
+    "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMifQ.eyJhZG1pc3Npb24iOnsiZHluYW1pY19saW1pdF91c2QiOjAsInBlcm1pdHRlZCI6ZmFsc2UsInJlYXNvbl9jb2RlIjoiaWRlbnRpdHlfdW5yZXNvbHZhYmxlIiwidHJ1c3RfbGV2ZWwiOjEsInRydXN0X2xldmVsX2xhYmVsIjoiTDEg4oCUIFJlZ2lzdGVyZWQiLCJ2ZXJkaWN0IjoiZGVueSJ9LCJiaW5kaW5nIjp7ImFjdGlvbl9jbGFzcyI6ImlycmV2ZXJzaWJsZSIsImFtb3VudF91c2QiOjUwLCJiaW5kaW5nX2RpZ2VzdCI6ImI1OTY4NGRiMmJmMTdjNDMwNjIzY2NhMzcwZDNlMzM0NzFlMzI4YTZiZWYxOTYwYzhiZWU2MGRlODBjMDZiMmUiLCJjaGFyZ2VfcmVmIjoiZml4dHVyZV9saXZlXzAwMSIsIm5vbmNlIjoiZTc2NTYxNTAtZGNmMC00OWI0LWFkMDItYmU5MWIwZDU3NDdhIn0sImNhbm9uaWNhbGl6YXRpb24iOiJKQ1MtUkZDLTg3ODUiLCJlbmZvcmNlbWVudCI6eyJjaGVja2VkX2F0IjoiMjAyNi0wNi0wNVQyMTozMzoxNC42NzhaIiwiY29tcG9zZSI6IkdhdGV3YXkgZW5mb3JjZXMgc3RhdGljIGNhcHMgKyBzZXR0bGVtZW50OyB0aGlzIGF0dGVzdGF0aW9uIHN1cHBsaWVzIGFkbWlzc2lvbiArIGR5bmFtaWMgbGltaXQuIEVmZmVjdGl2ZSBsaW1pdCA9IG1pbihnYXRld2F5X3N0YXRpY19jYXAsIGFkbWlzc2lvbi5keW5hbWljX2xpbWl0X3VzZCkuIEFic2VudCBmaWVsZCA9PiB1bi1nYXRlZC4iLCJndWFyYW50ZWUiOiJwb2ludF9pbl90aW1lIiwidmFsaWRfZm9yX3NlY29uZHMiOjB9LCJleHBpcmVzX2F0IjoiMjAyNi0wNi0wNVQyMTozMzoxNC42NzhaIiwiZmFzdF9nYXRlcyI6eyJjZXJ0aWZpY2F0ZSI6ImV4cGlyZWQiLCJpZGVudGl0eSI6InVucmVzb2x2YWJsZSIsImtleV9saWZlY3ljbGUiOiJhY3RpdmUifSwiaXNzdWVkX2F0IjoiMjAyNi0wNi0wNVQyMTozMzoxNC42NzhaIiwic3BlYyI6ImN0ZWYtdmVyaWZpZXItYXR0ZXN0YXRpb24vdjAuMSIsInN1YmplY3QiOnsiYWdlbnRfaWQiOm51bGwsImRpZCI6ImRpZDp3ZWI6Z2V0YWdlbnRpZC5kZXY6YWdlbnQ6cHJvYmUifSwidHlwZSI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJ2ZXJpZmllciI6eyJpZCI6ImRpZDp3ZWI6Z2V0YWdlbnRpZC5kZXYiLCJqd2tzX3VybCI6Imh0dHBzOi8vZ2V0YWdlbnRpZC5kZXYvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiYWdlbnRpZC0yMDI2LTAzIiwibmFtZSI6IkFnZW50SUQifX0.nyKK48QVB4gi0EJT2TdKec8PvwZHMAcG3mJuFOxytFdwgodmpkF2jY-IAZqmnT8SYR5zCfUrrcYfATFx5-55Bw"
+  },
+  "conformance_scenarios": [
+    {
+      "scenario": "admit_L3_payment_50",
+      "expected_verdict": "admit",
+      "verifier_attestation": {
+        "type": "VerifierAttestation",
+        "spec": "ctef-verifier-attestation/v0.1",
+        "verifier": {
+          "id": "did:web:getagentid.dev",
+          "name": "AgentID",
+          "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
+          "kid": "agentid-2026-03"
+        },
+        "subject": {
+          "did": "did:web:getagentid.dev:agent:demo-l3",
+          "agent_id": "demo-l3"
+        },
+        "admission": {
+          "verdict": "admit",
+          "trust_level": 3,
+          "trust_level_label": "L3 — Secured",
+          "dynamic_limit_usd": 10000,
+          "permitted": true,
+          "reason_code": null
+        },
+        "fast_gates": {
+          "identity": "confirmed",
+          "certificate": "valid",
+          "key_lifecycle": "active"
+        },
+        "binding": {
+          "charge_ref": "lc_charge_0001",
+          "amount_usd": 50,
+          "action_class": "irreversible",
+          "binding_digest": "a273c9088d5fcfe9f1631e2830a65d19b903da362bbc63b6e198bd7eed220c0c",
+          "nonce": "00000000-0000-4000-8000-000000000001"
+        },
+        "enforcement": {
+          "guarantee": "point_in_time",
+          "checked_at": "2026-06-05T12:00:00.000Z",
+          "valid_for_seconds": 30,
+          "compose": "Gateway enforces static caps + settlement; this attestation supplies admission + dynamic limit. Effective limit = min(gateway_static_cap, admission.dynamic_limit_usd). Absent field => un-gated."
+        },
+        "issued_at": "2026-06-05T12:00:00.000Z",
+        "expires_at": "2026-06-05T12:00:30.000Z",
+        "canonicalization": "JCS-RFC-8785",
+        "digest": "451cb65c027bd1ab72b7da5e418507ee9657a249ee03ee0b7b08b9ac2898f0b2",
+        "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMifQ.eyJhZG1pc3Npb24iOnsiZHluYW1pY19saW1pdF91c2QiOjEwMDAwLCJwZXJtaXR0ZWQiOnRydWUsInJlYXNvbl9jb2RlIjpudWxsLCJ0cnVzdF9sZXZlbCI6MywidHJ1c3RfbGV2ZWxfbGFiZWwiOiJMMyDigJQgU2VjdXJlZCIsInZlcmRpY3QiOiJhZG1pdCJ9LCJiaW5kaW5nIjp7ImFjdGlvbl9jbGFzcyI6ImlycmV2ZXJzaWJsZSIsImFtb3VudF91c2QiOjUwLCJiaW5kaW5nX2RpZ2VzdCI6ImEyNzNjOTA4OGQ1ZmNmZTlmMTYzMWUyODMwYTY1ZDE5YjkwM2RhMzYyYmJjNjNiNmUxOThiZDdlZWQyMjBjMGMiLCJjaGFyZ2VfcmVmIjoibGNfY2hhcmdlXzAwMDEiLCJub25jZSI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMSJ9LCJjYW5vbmljYWxpemF0aW9uIjoiSkNTLVJGQy04Nzg1IiwiZW5mb3JjZW1lbnQiOnsiY2hlY2tlZF9hdCI6IjIwMjYtMDYtMDVUMTI6MDA6MDAuMDAwWiIsImNvbXBvc2UiOiJHYXRld2F5IGVuZm9yY2VzIHN0YXRpYyBjYXBzICsgc2V0dGxlbWVudDsgdGhpcyBhdHRlc3RhdGlvbiBzdXBwbGllcyBhZG1pc3Npb24gKyBkeW5hbWljIGxpbWl0LiBFZmZlY3RpdmUgbGltaXQgPSBtaW4oZ2F0ZXdheV9zdGF0aWNfY2FwLCBhZG1pc3Npb24uZHluYW1pY19saW1pdF91c2QpLiBBYnNlbnQgZmllbGQgPT4gdW4tZ2F0ZWQuIiwiZ3VhcmFudGVlIjoicG9pbnRfaW5fdGltZSIsInZhbGlkX2Zvcl9zZWNvbmRzIjozMH0sImV4cGlyZXNfYXQiOiIyMDI2LTA2LTA1VDEyOjAwOjMwLjAwMFoiLCJmYXN0X2dhdGVzIjp7ImNlcnRpZmljYXRlIjoidmFsaWQiLCJpZGVudGl0eSI6ImNvbmZpcm1lZCIsImtleV9saWZlY3ljbGUiOiJhY3RpdmUifSwiaXNzdWVkX2F0IjoiMjAyNi0wNi0wNVQxMjowMDowMC4wMDBaIiwic3BlYyI6ImN0ZWYtdmVyaWZpZXItYXR0ZXN0YXRpb24vdjAuMSIsInN1YmplY3QiOnsiYWdlbnRfaWQiOiJkZW1vLWwzIiwiZGlkIjoiZGlkOndlYjpnZXRhZ2VudGlkLmRldjphZ2VudDpkZW1vLWwzIn0sInR5cGUiOiJWZXJpZmllckF0dGVzdGF0aW9uIiwidmVyaWZpZXIiOnsiaWQiOiJkaWQ6d2ViOmdldGFnZW50aWQuZGV2Iiwiandrc191cmwiOiJodHRwczovL2dldGFnZW50aWQuZGV2Ly53ZWxsLWtub3duL2p3a3MuanNvbiIsImtpZCI6ImFnZW50aWQtMjAyNi0wMyIsIm5hbWUiOiJBZ2VudElEIn19.NOYX1FGuFxP5mUWui8ljyQwvYHlBaRVdDaY-2CtoI2aVQcny0yu_T1Ki57Dx209U4owjTI9NJoWXCyFJOT6pCA"
+      }
+    },
+    {
+      "scenario": "deny_L1_payment_scope",
+      "expected_verdict": "deny",
+      "verifier_attestation": {
+        "type": "VerifierAttestation",
+        "spec": "ctef-verifier-attestation/v0.1",
+        "verifier": {
+          "id": "did:web:getagentid.dev",
+          "name": "AgentID",
+          "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
+          "kid": "agentid-2026-03"
+        },
+        "subject": {
+          "did": "did:web:getagentid.dev:agent:demo-l1",
+          "agent_id": "demo-l1"
+        },
+        "admission": {
+          "verdict": "deny",
+          "trust_level": 1,
+          "trust_level_label": "L1 — Registered",
+          "dynamic_limit_usd": 0,
+          "permitted": false,
+          "reason_code": "scope_denied"
+        },
+        "fast_gates": {
+          "identity": "confirmed",
+          "certificate": "valid",
+          "key_lifecycle": "active"
+        },
+        "binding": {
+          "charge_ref": "lc_charge_0002",
+          "amount_usd": 50,
+          "action_class": "irreversible",
+          "binding_digest": "8161b51c7de8c790f7e7b8e117a90b06e7e2bca1621bbeef5d17bf0d177ee36f",
+          "nonce": "00000000-0000-4000-8000-000000000002"
+        },
+        "enforcement": {
+          "guarantee": "point_in_time",
+          "checked_at": "2026-06-05T12:00:00.000Z",
+          "valid_for_seconds": 0,
+          "compose": "Gateway enforces static caps + settlement; this attestation supplies admission + dynamic limit. Effective limit = min(gateway_static_cap, admission.dynamic_limit_usd). Absent field => un-gated."
+        },
+        "issued_at": "2026-06-05T12:00:00.000Z",
+        "expires_at": "2026-06-05T12:00:00.000Z",
+        "canonicalization": "JCS-RFC-8785",
+        "digest": "2df14075d5d800337e30fca84963a1e394f46da5a6e8e3aedac08e48a2e5d74c",
+        "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMifQ.eyJhZG1pc3Npb24iOnsiZHluYW1pY19saW1pdF91c2QiOjAsInBlcm1pdHRlZCI6ZmFsc2UsInJlYXNvbl9jb2RlIjoic2NvcGVfZGVuaWVkIiwidHJ1c3RfbGV2ZWwiOjEsInRydXN0X2xldmVsX2xhYmVsIjoiTDEg4oCUIFJlZ2lzdGVyZWQiLCJ2ZXJkaWN0IjoiZGVueSJ9LCJiaW5kaW5nIjp7ImFjdGlvbl9jbGFzcyI6ImlycmV2ZXJzaWJsZSIsImFtb3VudF91c2QiOjUwLCJiaW5kaW5nX2RpZ2VzdCI6IjgxNjFiNTFjN2RlOGM3OTBmN2U3YjhlMTE3YTkwYjA2ZTdlMmJjYTE2MjFiYmVlZjVkMTdiZjBkMTc3ZWUzNmYiLCJjaGFyZ2VfcmVmIjoibGNfY2hhcmdlXzAwMDIiLCJub25jZSI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMiJ9LCJjYW5vbmljYWxpemF0aW9uIjoiSkNTLVJGQy04Nzg1IiwiZW5mb3JjZW1lbnQiOnsiY2hlY2tlZF9hdCI6IjIwMjYtMDYtMDVUMTI6MDA6MDAuMDAwWiIsImNvbXBvc2UiOiJHYXRld2F5IGVuZm9yY2VzIHN0YXRpYyBjYXBzICsgc2V0dGxlbWVudDsgdGhpcyBhdHRlc3RhdGlvbiBzdXBwbGllcyBhZG1pc3Npb24gKyBkeW5hbWljIGxpbWl0LiBFZmZlY3RpdmUgbGltaXQgPSBtaW4oZ2F0ZXdheV9zdGF0aWNfY2FwLCBhZG1pc3Npb24uZHluYW1pY19saW1pdF91c2QpLiBBYnNlbnQgZmllbGQgPT4gdW4tZ2F0ZWQuIiwiZ3VhcmFudGVlIjoicG9pbnRfaW5fdGltZSIsInZhbGlkX2Zvcl9zZWNvbmRzIjowfSwiZXhwaXJlc19hdCI6IjIwMjYtMDYtMDVUMTI6MDA6MDAuMDAwWiIsImZhc3RfZ2F0ZXMiOnsiY2VydGlmaWNhdGUiOiJ2YWxpZCIsImlkZW50aXR5IjoiY29uZmlybWVkIiwia2V5X2xpZmVjeWNsZSI6ImFjdGl2ZSJ9LCJpc3N1ZWRfYXQiOiIyMDI2LTA2LTA1VDEyOjAwOjAwLjAwMFoiLCJzcGVjIjoiY3RlZi12ZXJpZmllci1hdHRlc3RhdGlvbi92MC4xIiwic3ViamVjdCI6eyJhZ2VudF9pZCI6ImRlbW8tbDEiLCJkaWQiOiJkaWQ6d2ViOmdldGFnZW50aWQuZGV2OmFnZW50OmRlbW8tbDEifSwidHlwZSI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJ2ZXJpZmllciI6eyJpZCI6ImRpZDp3ZWI6Z2V0YWdlbnRpZC5kZXYiLCJqd2tzX3VybCI6Imh0dHBzOi8vZ2V0YWdlbnRpZC5kZXYvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiYWdlbnRpZC0yMDI2LTAzIiwibmFtZSI6IkFnZW50SUQifX0.X0KQxcapSJI3YI7Uejuty7pVuz8ezCRSC3phRcxGxNYU2SNzFpKKZD8z3QnVZ8iPxcxijD997INJ-6HgOY4VCg"
+      }
+    },
+    {
+      "scenario": "deny_L3_limit_exceeded",
+      "expected_verdict": "deny",
+      "verifier_attestation": {
+        "type": "VerifierAttestation",
+        "spec": "ctef-verifier-attestation/v0.1",
+        "verifier": {
+          "id": "did:web:getagentid.dev",
+          "name": "AgentID",
+          "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
+          "kid": "agentid-2026-03"
+        },
+        "subject": {
+          "did": "did:web:getagentid.dev:agent:demo-l3",
+          "agent_id": "demo-l3"
+        },
+        "admission": {
+          "verdict": "deny",
+          "trust_level": 3,
+          "trust_level_label": "L3 — Secured",
+          "dynamic_limit_usd": 10000,
+          "permitted": true,
+          "reason_code": "limit_exceeded"
+        },
+        "fast_gates": {
+          "identity": "confirmed",
+          "certificate": "valid",
+          "key_lifecycle": "active"
+        },
+        "binding": {
+          "charge_ref": "lc_charge_0003",
+          "amount_usd": 10001,
+          "action_class": "irreversible",
+          "binding_digest": "29d721173ad621526fdf6c2ed3d3ace1bcb7038a93db6e1ecdeaa352a0ceb962",
+          "nonce": "00000000-0000-4000-8000-000000000003"
+        },
+        "enforcement": {
+          "guarantee": "point_in_time",
+          "checked_at": "2026-06-05T12:00:00.000Z",
+          "valid_for_seconds": 0,
+          "compose": "Gateway enforces static caps + settlement; this attestation supplies admission + dynamic limit. Effective limit = min(gateway_static_cap, admission.dynamic_limit_usd). Absent field => un-gated."
+        },
+        "issued_at": "2026-06-05T12:00:00.000Z",
+        "expires_at": "2026-06-05T12:00:00.000Z",
+        "canonicalization": "JCS-RFC-8785",
+        "digest": "a7e60b97a57ab16d255ecc7b4f8c9b0eae771620efaf65e829c6899a610a0d50",
+        "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMifQ.eyJhZG1pc3Npb24iOnsiZHluYW1pY19saW1pdF91c2QiOjEwMDAwLCJwZXJtaXR0ZWQiOnRydWUsInJlYXNvbl9jb2RlIjoibGltaXRfZXhjZWVkZWQiLCJ0cnVzdF9sZXZlbCI6MywidHJ1c3RfbGV2ZWxfbGFiZWwiOiJMMyDigJQgU2VjdXJlZCIsInZlcmRpY3QiOiJkZW55In0sImJpbmRpbmciOnsiYWN0aW9uX2NsYXNzIjoiaXJyZXZlcnNpYmxlIiwiYW1vdW50X3VzZCI6MTAwMDEsImJpbmRpbmdfZGlnZXN0IjoiMjlkNzIxMTczYWQ2MjE1MjZmZGY2YzJlZDNkM2FjZTFiY2I3MDM4YTkzZGI2ZTFlY2RlYWEzNTJhMGNlYjk2MiIsImNoYXJnZV9yZWYiOiJsY19jaGFyZ2VfMDAwMyIsIm5vbmNlIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAzIn0sImNhbm9uaWNhbGl6YXRpb24iOiJKQ1MtUkZDLTg3ODUiLCJlbmZvcmNlbWVudCI6eyJjaGVja2VkX2F0IjoiMjAyNi0wNi0wNVQxMjowMDowMC4wMDBaIiwiY29tcG9zZSI6IkdhdGV3YXkgZW5mb3JjZXMgc3RhdGljIGNhcHMgKyBzZXR0bGVtZW50OyB0aGlzIGF0dGVzdGF0aW9uIHN1cHBsaWVzIGFkbWlzc2lvbiArIGR5bmFtaWMgbGltaXQuIEVmZmVjdGl2ZSBsaW1pdCA9IG1pbihnYXRld2F5X3N0YXRpY19jYXAsIGFkbWlzc2lvbi5keW5hbWljX2xpbWl0X3VzZCkuIEFic2VudCBmaWVsZCA9PiB1bi1nYXRlZC4iLCJndWFyYW50ZWUiOiJwb2ludF9pbl90aW1lIiwidmFsaWRfZm9yX3NlY29uZHMiOjB9LCJleHBpcmVzX2F0IjoiMjAyNi0wNi0wNVQxMjowMDowMC4wMDBaIiwiZmFzdF9nYXRlcyI6eyJjZXJ0aWZpY2F0ZSI6InZhbGlkIiwiaWRlbnRpdHkiOiJjb25maXJtZWQiLCJrZXlfbGlmZWN5Y2xlIjoiYWN0aXZlIn0sImlzc3VlZF9hdCI6IjIwMjYtMDYtMDVUMTI6MDA6MDAuMDAwWiIsInNwZWMiOiJjdGVmLXZlcmlmaWVyLWF0dGVzdGF0aW9uL3YwLjEiLCJzdWJqZWN0Ijp7ImFnZW50X2lkIjoiZGVtby1sMyIsImRpZCI6ImRpZDp3ZWI6Z2V0YWdlbnRpZC5kZXY6YWdlbnQ6ZGVtby1sMyJ9LCJ0eXBlIjoiVmVyaWZpZXJBdHRlc3RhdGlvbiIsInZlcmlmaWVyIjp7ImlkIjoiZGlkOndlYjpnZXRhZ2VudGlkLmRldiIsImp3a3NfdXJsIjoiaHR0cHM6Ly9nZXRhZ2VudGlkLmRldi8ud2VsbC1rbm93bi9qd2tzLmpzb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMiLCJuYW1lIjoiQWdlbnRJRCJ9fQ.DYrXoGzZ-4yTY5kvxZ2XA76y52QjHviv6Cpv7KuB0Wi0KSuYk-4k0bU4fi3Fd5BCNndxvBTV2Or1A2a69z_cAw"
+      }
+    },
+    {
+      "scenario": "flag_L3_dual_approval",
+      "expected_verdict": "flag",
+      "verifier_attestation": {
+        "type": "VerifierAttestation",
+        "spec": "ctef-verifier-attestation/v0.1",
+        "verifier": {
+          "id": "did:web:getagentid.dev",
+          "name": "AgentID",
+          "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
+          "kid": "agentid-2026-03"
+        },
+        "subject": {
+          "did": "did:web:getagentid.dev:agent:demo-l3",
+          "agent_id": "demo-l3"
+        },
+        "admission": {
+          "verdict": "flag",
+          "trust_level": 3,
+          "trust_level_label": "L3 — Secured",
+          "dynamic_limit_usd": 10000,
+          "permitted": true,
+          "reason_code": "dual_approval_required"
+        },
+        "fast_gates": {
+          "identity": "confirmed",
+          "certificate": "valid",
+          "key_lifecycle": "active"
+        },
+        "binding": {
+          "charge_ref": "lc_charge_0004",
+          "amount_usd": 600,
+          "action_class": "irreversible",
+          "binding_digest": "7c5bc7faefd8a0cdd94475060332b9c43f359a4264f5e366a59f52dc1b122d9f",
+          "nonce": "00000000-0000-4000-8000-000000000004"
+        },
+        "enforcement": {
+          "guarantee": "point_in_time",
+          "checked_at": "2026-06-05T12:00:00.000Z",
+          "valid_for_seconds": 30,
+          "compose": "Gateway enforces static caps + settlement; this attestation supplies admission + dynamic limit. Effective limit = min(gateway_static_cap, admission.dynamic_limit_usd). Absent field => un-gated."
+        },
+        "issued_at": "2026-06-05T12:00:00.000Z",
+        "expires_at": "2026-06-05T12:00:30.000Z",
+        "canonicalization": "JCS-RFC-8785",
+        "digest": "06f56c2d9976cde9255a8b17727039013fef2f4e78ea13de95468a8ab1744fb3",
+        "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJraWQiOiJhZ2VudGlkLTIwMjYtMDMifQ.eyJhZG1pc3Npb24iOnsiZHluYW1pY19saW1pdF91c2QiOjEwMDAwLCJwZXJtaXR0ZWQiOnRydWUsInJlYXNvbl9jb2RlIjoiZHVhbF9hcHByb3ZhbF9yZXF1aXJlZCIsInRydXN0X2xldmVsIjozLCJ0cnVzdF9sZXZlbF9sYWJlbCI6IkwzIOKAlCBTZWN1cmVkIiwidmVyZGljdCI6ImZsYWcifSwiYmluZGluZyI6eyJhY3Rpb25fY2xhc3MiOiJpcnJldmVyc2libGUiLCJhbW91bnRfdXNkIjo2MDAsImJpbmRpbmdfZGlnZXN0IjoiN2M1YmM3ZmFlZmQ4YTBjZGQ5NDQ3NTA2MDMzMmI5YzQzZjM1OWE0MjY0ZjVlMzY2YTU5ZjUyZGMxYjEyMmQ5ZiIsImNoYXJnZV9yZWYiOiJsY19jaGFyZ2VfMDAwNCIsIm5vbmNlIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDA0In0sImNhbm9uaWNhbGl6YXRpb24iOiJKQ1MtUkZDLTg3ODUiLCJlbmZvcmNlbWVudCI6eyJjaGVja2VkX2F0IjoiMjAyNi0wNi0wNVQxMjowMDowMC4wMDBaIiwiY29tcG9zZSI6IkdhdGV3YXkgZW5mb3JjZXMgc3RhdGljIGNhcHMgKyBzZXR0bGVtZW50OyB0aGlzIGF0dGVzdGF0aW9uIHN1cHBsaWVzIGFkbWlzc2lvbiArIGR5bmFtaWMgbGltaXQuIEVmZmVjdGl2ZSBsaW1pdCA9IG1pbihnYXRld2F5X3N0YXRpY19jYXAsIGFkbWlzc2lvbi5keW5hbWljX2xpbWl0X3VzZCkuIEFic2VudCBmaWVsZCA9PiB1bi1nYXRlZC4iLCJndWFyYW50ZWUiOiJwb2ludF9pbl90aW1lIiwidmFsaWRfZm9yX3NlY29uZHMiOjMwfSwiZXhwaXJlc19hdCI6IjIwMjYtMDYtMDVUMTI6MDA6MzAuMDAwWiIsImZhc3RfZ2F0ZXMiOnsiY2VydGlmaWNhdGUiOiJ2YWxpZCIsImlkZW50aXR5IjoiY29uZmlybWVkIiwia2V5X2xpZmVjeWNsZSI6ImFjdGl2ZSJ9LCJpc3N1ZWRfYXQiOiIyMDI2LTA2LTA1VDEyOjAwOjAwLjAwMFoiLCJzcGVjIjoiY3RlZi12ZXJpZmllci1hdHRlc3RhdGlvbi92MC4xIiwic3ViamVjdCI6eyJhZ2VudF9pZCI6ImRlbW8tbDMiLCJkaWQiOiJkaWQ6d2ViOmdldGFnZW50aWQuZGV2OmFnZW50OmRlbW8tbDMifSwidHlwZSI6IlZlcmlmaWVyQXR0ZXN0YXRpb24iLCJ2ZXJpZmllciI6eyJpZCI6ImRpZDp3ZWI6Z2V0YWdlbnRpZC5kZXYiLCJqd2tzX3VybCI6Imh0dHBzOi8vZ2V0YWdlbnRpZC5kZXYvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiYWdlbnRpZC0yMDI2LTAzIiwibmFtZSI6IkFnZW50SUQifX0.O7vaggm379nk4wo8wngJY82W_ScmansMY3rexxzMFHmCu5LKSCH6frhsq6AsJcLaPp8JRM4QQG65AXJE35p_AQ"
+      }
+    }
+  ]
+}
