@@ -32,7 +32,8 @@ gateway drops into its pre-mint check.
     "id": "did:web:getagentid.dev",
     "name": "AgentID",
     "jwks_url": "https://getagentid.dev/.well-known/jwks.json",
-    "kid": "agentid-2026-03"
+    "kid": "agentid-2026-03",
+    "key_source": "jwks_resolved"   // key provenance (#1829): consumer resolves via JWKS
   },
   "subject": { "did": "did:web:...", "agent_id": "..." },
 
@@ -55,9 +56,12 @@ gateway drops into its pre-mint check.
     "charge_ref": "<gateway charge_ref>",
     "amount_usd": 50,
     "action_class": "irreversible",  // irreversible | compensable | reversible
-    "binding_digest": "<sha256(JCS(charge_ref, amount_usd, subject.did, nonce))>",
-    "nonce": "<uuid>"
+    "binding_digest": "<sha256(JCS({amount_usd, charge_ref, nonce, subject_did}))>",
+    "nonce": "<uuid>",               // normative replay field (semantics to consumer)
+    "action_ref": "<sha256(agent_id‖action_type‖scope‖timestamp_ms)>",
+    "action_ref_method": "argentum-core action-ref-v1"  // names the preimage (#1850)
   },
+  "attestation_ref": "<sha256(JCS({kid, subject_did, verifier}))>",  // L1 reference (#1920)
 
   "enforcement": {
     "guarantee": "point_in_time",
@@ -133,3 +137,22 @@ The field is **optional** at every layer. A gateway that does not understand
 `verifier_attestation` ignores it and enforces its own static caps — identical behaviour to
 today. A verifier that is unreachable simply yields no field ⇒ un-gated. Clean degradation in
 both directions, which is the property the v0.4 thread named as the design constraint.
+
+## 8. A2A#1920 v0.4 alignment (pre-execution-verdict-v0)
+
+This object is the verifier side of the three-part seam ratified on A2A#1920
+(verifier `verifier_attestation` → gateway static caps + settlement → exactly-once guard):
+
+- **`binding_digest` is byte-identical** to the converged gateway construction
+  (`sha256(JCS({amount_usd, charge_ref, nonce, subject_did}))`, evidai/LemonCake), so a gateway
+  recomputes and matches it at preflight. The four preflight checks (verify signature, recompute
+  binding_digest, `verdict == "admit"`, `effective_budget = min(static_cap, dynamic_limit_usd)`)
+  all read fields this object already emits.
+- **`action_ref`** uses the `argentum-core action-ref-v1` preimage — byte-identical to
+  SafeAgent's — so this admission joins a SafeAgent `COMMITTED` claim for the exactly-once /
+  receipt layer without either side trusting the other. `action_ref_method` names the preimage
+  per #1850 (the APS `draft-pidlisnyi-aps-01` preimage differs and would be named accordingly).
+- **`nonce`** is the normative replay field; **`attestation_ref`** references the L1 attestation;
+  **`verifier.key_source`** carries key provenance per #1829 (resolved via JWKS, not inline).
+- **Receipt anchoring** (`execution_block_anchor`) is the on-chain rail's job; a fiat/off-chain
+  rail correlates via `charge_ref` (offline-verifiable). This object is rail-agnostic.
