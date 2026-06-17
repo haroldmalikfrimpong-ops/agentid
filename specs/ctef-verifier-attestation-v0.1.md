@@ -71,7 +71,8 @@ gateway drops into its pre-mint check.
   },
 
   "issued_at": "2026-06-05T...Z",
-  "expires_at": "2026-06-05T...Z",
+  "expires_at": "2026-06-05T...Z",       // = issued_at + freshness_ttl_seconds (binding, not advisory)
+  "freshness_ttl_seconds": 30,           // normative item 2 (#1920): hard preflight-to-reserve window
   "canonicalization": "JCS-RFC-8785",
 
   "digest": "<sha256(JCS(object without digest/jws))>",
@@ -87,7 +88,8 @@ gateway drops into its pre-mint check.
 3. If present →
    a. Verify `jws` against verifier.jwks_url (kid).        [authenticity]
    b. Recompute `binding.binding_digest` from this charge. [not replayed on another charge]
-   c. Check now <= expires_at.                             [freshness]
+   c. Require the reserve to COMPLETE strictly before expires_at;
+      if it cannot (e.g. under load), re-verify or fail closed.  [freshness — binding, #1920 item 2]
    d. Require admission.verdict == "admit".                [admission]
    e. Require fast_gates all green.                        [enforcement continuity]
    f. Enforce effective_limit = min(static_cap, admission.dynamic_limit_usd).
@@ -154,5 +156,12 @@ This object is the verifier side of the three-part seam ratified on A2A#1920
   per #1850 (the APS `draft-pidlisnyi-aps-01` preimage differs and would be named accordingly).
 - **`nonce`** is the normative replay field; **`attestation_ref`** references the L1 attestation;
   **`verifier.key_source`** carries key provenance per #1829 (resolved via JWKS, not inline).
+- **Normative item 2 (freshness, June 14):** `expires_at = issued_at + freshness_ttl_seconds`, now
+  emitted as a named field. It is a **hard preflight-to-reserve deadline**, not an advisory verdict
+  TTL — the gateway MUST complete the reserve strictly before it or re-verify / fail closed. The
+  irreversible/payment class sets it to 30s, within the recommended ≤60s bound.
+- **Normative item 4 (replay):** both surfaces are closed — cross-charge by `nonce` inside the
+  `binding_digest` JCS preimage, same-charge retry by the exactly-once guard keyed on `action_ref`.
+  Neither alone is sufficient; this object emits both.
 - **Receipt anchoring** (`execution_block_anchor`) is the on-chain rail's job; a fiat/off-chain
   rail correlates via `charge_ref` (offline-verifiable). This object is rail-agnostic.
