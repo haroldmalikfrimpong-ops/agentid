@@ -29,7 +29,9 @@ The method-specific identifier is the AgentID `agent_id`: the literal string `ag
 
 ```abnf
 agentid-did   = "did:agentid:" agent-id
-agent-id      = "agent_" 16lowerhex
+agent-id      = "agent_" 1*64idchar
+idchar        = %x61-7A / DIGIT / "_"        ; a-z, 0-9, underscore
+; identifiers the registry generates today are "agent_" 16lowerhex
 lowerhex      = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
 ```
 
