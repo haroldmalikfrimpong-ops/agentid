@@ -25,7 +25,7 @@ A DID that uses this method MUST begin with the prefix `did:agentid:`. Per DID C
 
 ## 3. Method-Specific Identifier
 
-The method-specific identifier is the AgentID `agent_id`: the literal string `agent_` followed by exactly 16 lowercase hexadecimal characters (64 bits of server-generated randomness).
+The method-specific identifier is the AgentID `agent_id`: the literal string `agent_` followed by 1 to 64 characters from `[a-z0-9_]`. Identifiers assigned by the registry today are `agent_` followed by exactly 16 lowercase hexadecimal characters (64 bits of server-generated randomness); the wider grammar also admits registry-assigned fixture identifiers such as `agent_interop_test_001` used by the published conformance fixtures.
 
 ```abnf
 agentid-did   = "did:agentid:" agent-id
@@ -214,7 +214,7 @@ Content-Type: application/json
 { "name": "...", "owner": "...", "capabilities": ["..."] }
 ```
 
-The registry generates the `agent_id` (`agent_` + 16 lowercase hex), generates an ECDSA P-256 keypair, issues a signed identity certificate, and stores the agent as active at trust level L1. The response includes `agent_id`; the DID is `did:agentid:<agent_id>`. The identifier is server-assigned and MUST NOT be chosen by the client.
+The registry generates the `agent_id` (today `agent_` + 16 lowercase hex), generates an ECDSA P-256 keypair, issues a signed identity certificate, and stores the agent as active at trust level L1. The response includes `agent_id`; the DID is `did:agentid:<agent_id>`. The identifier is server-assigned and MUST NOT be chosen by the client.
 
 ### 6.2 Read (Resolve)
 
