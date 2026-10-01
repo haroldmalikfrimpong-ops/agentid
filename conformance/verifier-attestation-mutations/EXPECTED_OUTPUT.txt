@@ -1,0 +1,12 @@
+baseline OK   [admit_L3_payment_50]
+baseline OK   [deny_L1_payment_scope]
+baseline OK   [deny_L3_limit_exceeded]
+baseline OK   [flag_L3_dual_approval]
+
+================ RESULT ================
+attestations:            4
+baseline verifies:       4/4
+mutations attempted:     60
+mutations REJECTED:      60/60
+mutations that ESCAPED:  0
+=======================================

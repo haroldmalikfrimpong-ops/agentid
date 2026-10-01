@@ -12,6 +12,12 @@ useDefault = true
 description = "Test fixtures, conformance vectors, and public-by-design certificates"
 
 paths = [
+    # Public conformance fixtures: the JWS values are issuer-signed
+    # attestations published on purpose (they are what third parties
+    # re-verify). gitleaks' generic JWT rule flags them; they are not secrets.
+    '''tests/verifier_attestation_fixture\.json''',
+    '''conformance/verifier-attestation-mutations/verifier_attestation_fixture\.json''',
+
     # Cross-runtime conformance test vectors. The EXPECTED_ROOT_KEY,
     # EXPECTED_AEAD_KEY, and EXPECTED_NONCE_KEY values are HKDF outputs
     # from a known seed — every correct implementation of the relay
